@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import torch
 from config import CONFIG
@@ -15,6 +16,12 @@ def main():
     episode_count, current_ep_reward = 0, 0
     state, _ = env.reset()
     state = np.array(state)
+    
+    save_dir = os.path.dirname(CONFIG["MODEL_SAVE_PATH"])
+    os.makedirs(save_dir, exist_ok=True)
+    best_model_path = os.path.join(save_dir, "dqn_pacman_best.pth")
+    latest_model_path = os.path.join(save_dir, "dqn_pacman_latest.pth")
+    best_avg_reward = -float('inf')
     
     print("Populating replay buffer... Training will begin shortly.")
 
@@ -47,6 +54,11 @@ def main():
             rewards_log.append(current_ep_reward)
             running_reward = np.mean(episode_rewards[-100:]) # 100 episode moving average
 
+            if running_reward > best_avg_reward:
+                best_avg_reward = running_reward
+                torch.save(agent.policy_net.state_dict(), best_model_path)
+                print(f"New best model saved with average reward {best_avg_reward:.2f}")
+
             # Print logs every X episodes
             if episode_count % CONFIG["LOG_INTERVAL_EPISODES"] == 0:
                 print(f"Episode: {episode_count} | "
@@ -61,7 +73,7 @@ def main():
             state = np.array(state)
             current_ep_reward = 0
 
-    torch.save(agent.policy_net.state_dict(), CONFIG["MODEL_SAVE_PATH"])
+    torch.save(agent.policy_net.state_dict(), latest_model_path)
     plot_training_metrics(steps_log, rewards_log, CONFIG["PLOT_SAVE_PATH"])
     env.close()
 

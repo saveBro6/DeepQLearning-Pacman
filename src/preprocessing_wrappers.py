@@ -3,9 +3,13 @@ from gymnasium.wrappers import ResizeObservation, GrayscaleObservation, FrameSta
 import ale_py
 from config import CONFIG
 
-def make_env(env_name, render_mode=None):
+def make_env(env_name, obs_type = "rgb", render_mode=None):
     # Setup Atari environment correctly with Farama Gymnasium wrappers
     gym.register_envs(ale_py)
+
+    if obs_type == "ram":
+        env = gym.make(env_name, obs_type="ram")
+        return env 
     if render_mode is not None:
         env = gym.make(env_name, obs_type="rgb", render_mode=render_mode)
     else:
