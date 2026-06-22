@@ -9,6 +9,7 @@ def make_env(env_name, obs_type = "rgb", render_mode=None):
 
     if obs_type == "ram":
         env = gym.make(env_name, obs_type="ram")
+        env = FrameStackObservation(env, stack_size=CONFIG["FRAME_STACK"])
         return env 
     if render_mode is not None:
         env = gym.make(env_name, obs_type="rgb", render_mode=render_mode)

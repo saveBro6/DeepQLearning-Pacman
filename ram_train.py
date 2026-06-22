@@ -8,7 +8,7 @@ from src.utils import plot_training_metrics
 
 def main():
     print(f"Using device: {CONFIG['DEVICE']}")
-    env = make_env(CONFIG["ENV_NAME"])
+    env = make_env(CONFIG["ENV_NAME"], obs_type="ram")
     agent = RamAgent(env.action_space.n, CONFIG["DEVICE"])
     
     steps_log, rewards_log = [], []
