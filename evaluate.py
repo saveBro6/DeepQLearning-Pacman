@@ -5,13 +5,13 @@ from config import CONFIG
 from src.preprocessing_wrappers import make_env
 from models.DeepQ_CNN import DQNCNN
 
-def evaluate(num_episodes=100):
-    if not os.path.exists(CONFIG["MODEL_SAVE_PATH"]):
-        print(f"Error: Model checkpoint not found at '{CONFIG['MODEL_SAVE_PATH']}'. Please run train.py first.")
+def evaluate(model_path, num_episodes=100):
+    if not os.path.exists(model_path):
+        print(f"Error: Model checkpoint not found at '{model_path}'.")
         return
     env = make_env(CONFIG["ENV_NAME"])
     model = DQNCNN(CONFIG["FRAME_STACK"], env.action_space.n).to(CONFIG["DEVICE"])
-    model.load_state_dict(torch.load(CONFIG["MODEL_SAVE_PATH"], map_location=CONFIG["DEVICE"]))
+    model.load_state_dict(torch.load(model_path, map_location=CONFIG["DEVICE"]))
     model.eval()
     
     scores = []
@@ -33,4 +33,9 @@ def evaluate(num_episodes=100):
     env.close()
 
 if __name__ == "__main__":
-    evaluate()
+    import argparse
+    parser = argparse.ArgumentParser(description="Evaluate DQN agent on Pacman")
+    parser.add_argument("model_path", type=str, help="Path to the model weights file")
+    parser.add_argument("--num_episodes", type=int, default=100, help="Number of episodes to evaluate")
+    args = parser.parse_args()
+    evaluate(args.model_path, num_episodes=args.num_episodes)

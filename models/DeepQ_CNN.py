@@ -33,3 +33,8 @@ class DQNCNN(nn.Module):
         x = self.features(x)
         x = x.reshape(x.size(0), -1)  # Flatten
         return self.fc(x)
+
+
+if __name__ == "__main__":
+    model = DQNCNN(4, 5)
+    print(model)

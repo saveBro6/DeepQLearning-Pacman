@@ -13,8 +13,9 @@ CONFIG = {
     "EPS_DECAY_STEPS": 500000,
     "TARGET_UPDATE_FREQ": 10000,
     "LOG_INTERVAL_EPISODES": 10,
-    "MAX_STEPS": 2000000,
-    "MODEL_SAVE_PATH": "weights/pacman_dqn.pth",
+    "MAX_STEPS": 200000,
+    "MODEL_SAVE_PATH": "weights2/dqn_pacman_latest.pth",
+    "BEST_MODEL_SAVE_PATH": "weights/dqn_pacman_best.pth", #dqn_pacman_best.pth",
     "PLOT_SAVE_PATH": "logs/training_metrics.png",
     "DEVICE": torch.device("cuda" if torch.cuda.is_available() else "cpu")
 }
